@@ -1,0 +1,26 @@
+<div class = "main">
+    <div class = "content">
+        <div class = "checkout-wrapper">
+            <div class="card text-center" style="width: 400px;margin: 100px auto;">
+                <div class="card-header">
+                  Order Summary
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title" style="color: green;">Order Checked Out</h5>
+                  <p class="card-text">The order was checkout successfully. Your order will be delivered to you.</p>
+                  <p class="card-text" style="font-weight: bold;">Number Of Items: {{ numberOfItems }}</p>
+                  <p class="card-text" style="font-weight: bold;">Total Price: ${{ totalPrice }}</p>
+                  <a href="#" [routerLink]="['/']" class="btn btn-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+                        <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
+                      </svg>
+                    Home
+                  </a>
+                </div>
+                <!-- <div class="card-footer text-body-secondary">
+                  2 days ago
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>
