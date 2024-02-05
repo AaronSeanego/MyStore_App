@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output,Input } from '@angular/core';
 import { RouterLink,RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 export class HeaderComponent {
 
   @Output() search_Item = new EventEmitter();
+  @Input() totalOrders: number = 0; 
 
   search: string = '';
   constructor () {

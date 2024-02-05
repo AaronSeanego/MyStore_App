@@ -27,6 +27,9 @@ export class ProductItemDetailComponent {
   product:Product[] = [];
   quantity:string = '1';
   order:any = {};
+  accessToken:any = [];
+  results:any = [];
+  numberOfOrder:number = 0;
 
   constructor(public itemsService: ItemsService,public route: ActivatedRoute,private router: Router) {
 
@@ -47,6 +50,21 @@ export class ProductItemDetailComponent {
       });
     });
 
+    this.itemsService.getAccessToken().subscribe((token) => {
+      this.itemsService.getAllOrders(token.access_token).subscribe((items:any) => {
+        if(items?.documents.length > 0) {
+          for(let i = 0; i < items?.documents.length; i++) {
+            if(items?.documents[i].status == "Active") {
+              this.numberOfOrder = this.numberOfOrder + parseInt(items?.documents[i].quantity);
+            }
+          }
+        }else {
+          document.querySelector(".card .text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: none;");
+        }
+
+      });
+    });
+
   }
 
   ngOnDestroy(): void {
@@ -54,6 +72,8 @@ export class ProductItemDetailComponent {
   }
 
   addToCart(name:string,price: BigInteger,url:string,description: string): void {
+    const status = "Active";
+
     this.order = {
       name: name,
       price: price,
@@ -64,6 +84,22 @@ export class ProductItemDetailComponent {
 
     console.log(this.order);
     this.itemsService.addItemsToCart(this.order);
+
+    this.itemsService.getAccessToken().subscribe(accessToken => {
+      // console.log(accessToken.access_token);
+      this.accessToken.push(accessToken.access_token);
+      console.log(this.accessToken[0]);
+      this.itemsService.addNewOrders(name,price,this.quantity,url,description,this.accessToken[0],status).subscribe(response => {
+        // this.results.push(response);
+        console.log(response);
+        if(response) {
+          // this.router.navigate(['/cart']);
+        }
+      });
+    });
+
+    // localStorage.setItem('user_id','Hello, World Man');
+    // localStorage.removeItem('user_id');
     this.router.navigate(['/cart']);
   }
 }

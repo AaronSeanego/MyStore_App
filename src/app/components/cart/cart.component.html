@@ -1,4 +1,4 @@
-<app-header></app-header>
+<app-header  [totalOrders] = "numberOfOrder"></app-header>
 
 <div class = "main">
     <div class = "content">
@@ -41,7 +41,17 @@
             }
           </div>
 
-          <div class="card text-center" style="margin: 100px auto;width: 500px;" *ngIf="(madeOrders.length == 0)">
+          <!-- <div>
+            @for (item of data; track $index) {
+              <div>
+                <div>
+                  <span>{{ data['document'] }}</span>
+                </div>
+              </div>
+            }
+          </div> -->
+
+          <div class="card text-center" style="margin: 100px auto;width: 500px;display: none;">
             <div class="card-header" style="color: gray;">
               Order List
             </div>
