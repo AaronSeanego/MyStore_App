@@ -41,16 +41,28 @@ export class ProductItemDetailComponent {
     });
     console.log(this.id);
 
-    this.itemsService.getProducts().subscribe(products => {
-      this.product_Items = products;
-      this.product_Items.forEach(item => {
-        if(item['id'] == parseInt(this.id)) {
-          this.product.push(item);
-        }
-      });
-    });
+    // this.itemsService.getProducts().subscribe(products => {
+    //   this.product_Items = products;
+    //   this.product_Items.forEach(item => {
+    //     if(item['id'] == parseInt(this.id)) {
+    //       this.product.push(item);
+    //     }
+    //   });
+    // });
 
     this.itemsService.getAccessToken().subscribe((token) => {
+
+      this.itemsService.getAllProducts(token.access_token).subscribe(data => {
+        console.log(data?.documents);
+        this.product_Items = data?.documents;
+        this.product_Items.forEach(item => {
+          console.log(item);
+          // if(item['_id'] == parseInt(this.id)) {
+          //   this.product.push(item);
+          // }
+        });
+      });
+
       this.itemsService.getAllOrders(token.access_token).subscribe((items:any) => {
         if(items?.documents.length > 0) {
           for(let i = 0; i < items?.documents.length; i++) {

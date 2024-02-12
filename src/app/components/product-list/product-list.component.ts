@@ -39,9 +39,9 @@ export class ProductListComponent {
   }
 
   ngOnInit():void {
-    this.itemsService.getProducts().subscribe(products => {
-      this.productList = products;
-    })
+    // this.itemsService.getProducts().subscribe(products => {
+    //   this.productList = products;
+    // })
 
     this.itemsService.getAccessToken().subscribe((token) => {
       this.itemsService.getAllOrders(token.access_token).subscribe((items:any) => {
@@ -56,7 +56,19 @@ export class ProductListComponent {
         }
 
       });
+
+      this.itemsService.getAllCategories(token.access_token).subscribe(data => {
+        // console.log(data?.documents);
+        // this.productList = data?.documents;
+      });
+
+      this.itemsService.getAllProducts(token.access_token).subscribe(data => {
+        console.log(data?.documents);
+        this.productList = data?.documents;
+      });
     });
+
+
   }
 
   ngOnDestroy():void {

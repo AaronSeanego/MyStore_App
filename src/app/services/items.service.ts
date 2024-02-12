@@ -32,6 +32,44 @@ export class ItemsService {
     // console.log(this.webToken);
   }
 
+  getAllCategories(token:string): Observable<any> {
+    const headers = {
+      'content-type': 'application/json',
+      'access-control-request-headers': '*',
+      // 'api-key': 'kH03wCLH2g9ExTFTtJkLAQHvhdjEmQ2qotDWxliIB437S9inFLLvpjlJcqrq3cAX',
+      'authorization': 'Bearer ' + token,
+      'accept': 'application/json'
+    }
+
+    const body = JSON.stringify({
+      "dataSource": "MyStoreCluster",
+      "database": "MyStoreApp-Db",
+      "collection": "Categories"
+    });
+
+    return this.http.post('https://data.mongodb-api.com/app/data-bzfbr/endpoint/data/v1/action/find',body,
+     {headers: headers});
+  }
+
+  getAllProducts(token:string): Observable<any> {
+    const headers = {
+      'content-type': 'application/json',
+      'access-control-request-headers': '*',
+      // 'api-key': 'kH03wCLH2g9ExTFTtJkLAQHvhdjEmQ2qotDWxliIB437S9inFLLvpjlJcqrq3cAX',
+      'authorization': 'Bearer ' + token,
+      'accept': 'application/json'
+    }
+
+    const body = JSON.stringify({
+      "dataSource": "MyStoreCluster",
+      "database": "MyStoreApp-Db",
+      "collection": "Products"
+    });
+
+    return this.http.post('https://data.mongodb-api.com/app/data-bzfbr/endpoint/data/v1/action/find',body,
+     {headers: headers});
+  }
+
   getAccessToken(): Observable<any> {
     
     const headers = {
