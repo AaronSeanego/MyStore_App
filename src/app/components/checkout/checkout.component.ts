@@ -7,6 +7,7 @@ import { ItemsService } from '../../services/items.service';
 import { Users } from '../../models/users';
 import { HeaderComponent } from '../../layout/header/header.component';
 import { Orders } from '../../models/orders';
+import { PaymentDetailsComponent } from '../payment-details/payment-details.component';
 
 @Component({
   selector: 'app-checkout',
@@ -16,7 +17,8 @@ import { Orders } from '../../models/orders';
     FormsModule,
     RouterLink,
     RouterLinkActive,
-    HeaderComponent
+    HeaderComponent,
+    PaymentDetailsComponent
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
@@ -43,6 +45,8 @@ export class CheckoutComponent {
   loggedinLastname:string = '';
   loggedInUserId:string = '';
   numberOfOrder:number = 0;
+  checkedValue:string = '';
+  totalPrice:number = 0;
 
   constructor (public itemsService: ItemsService,private router: Router) {
 
@@ -50,7 +54,9 @@ export class CheckoutComponent {
 
   ngOnInit(): void {
 
-    
+    if(localStorage.getItem("orderID") == null || undefined) {
+      this.router.navigate(['/']);
+    }
     if(localStorage.getItem('user_id') != null || undefined) {
       document.querySelector(".signIn-container")?.setAttribute("style", "display: none;");
       document.querySelector(".card")?.setAttribute("style", "display: none;");
@@ -59,40 +65,59 @@ export class CheckoutComponent {
 
     }
 
-    // this.ordersList = this.itemsService.getOrders();
 
     this.itemsService.getAccessToken().subscribe((token) => {
       this.access_Token = token.access_token;
     });
 
-    this.itemsService.setWebToken(this.access_Token);
-
-    this.itemsService.getAccessToken().subscribe(accessToken => {
-      this.accessToken.push(accessToken.access_token);
-      // this.itemsService.addNewOrders(name,price,this.quantity,url,description,this.accessToken[0]).subscribe(response => {
-      //   // this.results.push(response);
-      //   console.log(response);
-      // });
-    });
-
     this.itemsService.getAccessToken().subscribe((token) => {
-      this.itemsService.getAllOrders(token.access_token).subscribe((items:any) => {
-        if(items?.documents.length > 0) {
-          for(let i = 0; i < items?.documents.length; i++) {
-            if(items?.documents[i].status == "Active") {
-              this.ordersList.push(items?.documents[i]);
-              this.numberOfOrder = this.numberOfOrder + parseInt(items?.documents[i].quantity);
-            }
+      // console.log(token.access_token);
+      this.itemsService.getAllNewOrders(localStorage.getItem("orderID"),token.access_token).subscribe(data => {
+        for(let i = 0;i < data?.documents.length;i++) {
+          console.log(data?.documents[i]._id);
+          if(data?.documents[i]._id == localStorage.getItem("orderID") && data?.documents[i].status == "Active") {
+            this.checkedValue = 'true';
+          }else {
+            this.checkedValue = 'false';
           }
+        }
+
+        if(this.checkedValue == "true") {
+          this.itemsService.getAllOrders(token.access_token).subscribe((items:any) => {
+            
+            if(items?.documents.length > 0) {
+              for(let i = 0; i < items?.documents.length; i++) {
+                if(items?.documents[i].order_id == localStorage.getItem("orderID")) {
+                  this.ordersList.push(items?.documents[i]);
+                  this.numberOfOrder = this.numberOfOrder + parseInt(items?.documents[i].quantity);
+                  this.totalPrice = this.totalPrice + items?.documents[i].price;
+                }
+              }
+              document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+              document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0);z-index: 0;");
+              document.querySelector(".sr-only")?.setAttribute("style","display: none;z-index: 0;");
+            }else {
+              document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+              document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0);z-index: 0;");
+              document.querySelector(".sr-only")?.setAttribute("style","display: none;z-index: 0;");
+              document.querySelector(".card .text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: none;");
+            }
+            this.totalPrice = parseFloat((this.totalPrice * this.numberOfOrder).toFixed(4));
+            this.itemsService.updateNewOrderInfo(localStorage.getItem("orderID"),this.totalPrice,this.numberOfOrder,token.access_token).subscribe(data => {
+              console.log(data);
+            });
+          });
         }else {
           document.querySelector(".card .text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: none;");
         }
-
       });
+
     });
   }
 
   registerName(): void {
+    document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
+    document.querySelector(".spinner-border")?.setAttribute("style", "margin-top: 300px;");
     this.usersInfor = this.itemsService.addUsers(this.firstName, this.lastName, this.email, this.password, this.physicaladdress);
     console.log(this.usersInfor);
 
@@ -105,9 +130,18 @@ export class CheckoutComponent {
       this.accessToken.push(accessToken.access_token);
       console.log(this.accessToken[0]);
       this.itemsService.addNewUsers(this.firstName,this.lastName,this.email,this.password,this.physicaladdress,accessToken.access_token).subscribe(usersData => {
+        console.log(usersData);
         if(usersData) {
+
           document.querySelector(".card")?.setAttribute("style", "display: none;");
           document.querySelector(".items-container")?.setAttribute("style", "display: block;margin-top: 20px");
+          this.itemsService.updateOrder(localStorage.getItem("orderID"),usersData?.documents._id,accessToken.access_token).subscribe(updateResults => {
+            console.log(updateResults);
+          });
+          document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+          document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0);z-index: 0;");
+          document.querySelector(".sr-only")?.setAttribute("style","display: none;z-index: 0;");
+          alert("Create account was created sucessfully.");
         }
       });
     });
@@ -122,6 +156,8 @@ export class CheckoutComponent {
   signIn(): void {
 
       this.itemsService.getAccessToken().subscribe(accessToken => {
+        document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
+        document.querySelector(".spinner-border")?.setAttribute("style", "margin-top: 300px;");
         // console.log(accessToken.access_token);
         this.accessToken.push(accessToken.access_token);
         console.log(this.accessToken[0]);
@@ -136,8 +172,8 @@ export class CheckoutComponent {
           }else {
             document.querySelector(".signIn-container")?.setAttribute("style", "display: none;");
             document.querySelector(".items-container")?.setAttribute("style", "display: block;margin-top: 20px");
-            console.log(userResults?.document);
-            console.log(userResults?.document._id);
+            // console.log(userResults?.document);
+            // console.log(userResults?.document._id);
             this.loggedInEmail = userResults?.document.email;
             this.loggedInFirstname = userResults?.document.firstlast;
             this.loggedinLastname = userResults?.document.lastname;
@@ -146,28 +182,36 @@ export class CheckoutComponent {
             localStorage.setItem('first name',this.loggedInFirstname);
             localStorage.setItem('last name',this.loggedinLastname);
             localStorage.setItem('email',this.loggedInEmail);
+
+            this.itemsService.updateOrder(localStorage.getItem("orderID"),localStorage.getItem('user_id'),accessToken.access_token).subscribe(updateResults => {
+              console.log(updateResults);
+            });
+            document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+            document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0);z-index: 0;");
+            document.querySelector(".sr-only")?.setAttribute("style","display: none;z-index: 0;");
+            alert("User logged in sucessfully.");
           }
         });
       });
   }
 
   checkoutItems(): void {
-
+    this.router.navigate(['/payment-details']);
     this.itemsService.getAccessToken().subscribe(accessToken => {
-      // console.log(accessToken.access_token);
+      document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
+      document.querySelector(".spinner-border")?.setAttribute("style", "margin-top: 300px;");
       this.accessToken.push(accessToken.access_token);
-      console.log(this.accessToken[0]);
 
-      this.itemsService.updateOrder(localStorage.getItem('user_id'),accessToken.access_token).subscribe(updateResults => {
-        console.log(updateResults);
-        if(updateResults) {
-          this.router.navigate(['/confirmation']);
+      this.itemsService.updateNewOrderStatus(localStorage.getItem("orderID"),accessToken.access_token).subscribe(response => {
+        if(response) {
+          document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+          document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0);z-index: 0;");
+          document.querySelector(".sr-only")?.setAttribute("style","display: none;z-index: 0;");
+          this.router.navigate(['/payment-details']);
         }
       });
-
+      
     });
-    this.itemsService.setCheckout({checkout: "true"});
-    // this.router.navigate(['/confirmation']);
   }
 
 }

@@ -1,0 +1,53 @@
+<div class="d-flex justify-content-center" style="background-color: rgba(0,0,0,0.3);
+display: none;position: absolute;width: 100%;height: 100%;z-index: 999;">
+    <div class="spinner-border" role="status" style="margin-top: 300px;">
+      <span class="sr-only"></span>
+    </div>
+</div>
+
+<div class = "main">
+    <div class = "content">
+        <div class = "payment-form-wrapper">
+            <div class = "form-container">
+                <!-- <div style="text-align: center;">
+                    <label>Payment Details</label>
+                </div> -->
+                <form #paymentForm = "ngForm" style="width: 400px;margin: auto auto;top: 70px;" (ngSubmit)="newPayments()">
+                    <!-- <div class="input-group mb-3">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="#">Action</a></li>
+                          <li><a class="dropdown-item" href="#">Another action</a></li>
+                          <li><a class="dropdown-item" href="#">Something else here</a></li>
+                          <li><hr class="dropdown-divider"></li>
+                          <li><a class="dropdown-item" href="#">Separated link</a></li>
+                        </ul>
+                      </div> -->
+
+                    <div class="mb-3">
+                      <label for="exampleInputCardNumber1" class="form-label">Card Number</label>
+                      <input type="number" class="form-control" required maxlength="16" name = "Card_Number" [(ngModel)] = "card_number" #Card_Number = "ngModel" id="exampleInputCardNumber1" aria-describedby="CardNumberHelp">
+                      <div id="emailHelp" class="form-text" *ngIf="Card_Number.invalid">Please Enter Your Card Number</div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="exampleInputExpDate1" class="form-label">Exp Date</label>
+                      <input type="text" class="form-control" required name = "Exp_Date" [(ngModel)] = "exp_date" #Exp_Date = "ngModel" id="exampleInputExpDate1" aria-describedby="ExpDateHelp">
+                      <div id="emailHelp" class="form-text" *ngIf="Exp_Date.invalid">Please Enter Your Card Expiration Date</div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="exampleInputCVCNumber1" class="form-label">CVC Date</label>
+                      <input type="number" class="form-control" required name = "CVC_Number" [(ngModel)] = "cvc_number" #CVC_Number = "ngModel" id="exampleInputCVCNumber1" aria-describedby="CVCNumberHelp">
+                      <div id="emailHelp" class="form-text" *ngIf="CVC_Number.invalid">Please Enter Your Card Security Number</div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="exampleInputAccountHolder1" class="form-label">Account Holder</label>
+                      <input type="number" class="form-control" required name = "Account_Holder" [(ngModel)] = "account_holder" #Account_Holder = "ngModel" id="exampleInputAccountHolder1">
+                      <div id="emailHelp" class="form-text" *ngIf="Account_Holder.invalid">Please Enter Your Card Security Number</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" [disabled] = "paymentForm.invalid">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

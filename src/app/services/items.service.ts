@@ -150,6 +150,27 @@ export class ItemsService {
     {headers: headers});
   }
 
+  searchOrder(orderID:any,token:string): Observable<any> {
+
+    const headers = {
+      'content-type': 'application/json',
+      'access-control-request-headers': '*',
+      // 'api-key': 'kH03wCLH2g9ExTFTtJkLAQHvhdjEmQ2qotDWxliIB437S9inFLLvpjlJcqrq3cAX',
+      'authorization': 'Bearer ' + token,
+      'accept': 'application/json'
+    }
+
+    const body = JSON.stringify({
+      "dataSource": "MyStoreCluster",
+      "database": "MyStoreApp-Db",
+      "collection": "Orders",
+      "filter": { "_id": "ObjectId('" + orderID + "')"}
+    });
+
+    return this.http.post('https://data.mongodb-api.com/app/data-bzfbr/endpoint/data/v1/action/findOne',body,
+    {headers: headers});
+  }
+  
   searchUser(email:string,password:string,token:string): Observable<any> {
 
     console.log(email);
@@ -186,20 +207,121 @@ export class ItemsService {
     const body = JSON.stringify({
       "dataSource": "MyStoreCluster",
       "database": "MyStoreApp-Db",
-      "collection": "Orders"
+      "collection": "OrderedProducts"
   });
 
     return this.http.post('https://data.mongodb-api.com/app/data-bzfbr/endpoint/data/v1/action/find',body,
      {headers: headers});
   }
 
-  addNewOrders(name:string,price:BigInteger,quantity:string,url:string,description:string,token:string,status:string): Observable<any> {
+  getAllNewOrders(orderId:any,token:string): Observable<any> {
+    const headers = {
+      'content-type': 'application/json',
+      'access-control-request-headers': '*',
+      // 'api-key': 'kH03wCLH2g9ExTFTtJkLAQHvhdjEmQ2qotDWxliIB437S9inFLLvpjlJcqrq3cAX',
+      'authorization': 'Bearer ' + token,
+      'accept': 'application/json'
+    }
 
-    // console.log(name),
-    // console.log(price),
-    // console.log(quantity),
-    // console.log(description),
-    // console.log(url)
+    const body = JSON.stringify({
+      "dataSource": "MyStoreCluster",
+      "database": "MyStoreApp-Db",
+      "collection": "Orders"
+    });
+
+    return this.http.post('https://data.mongodb-api.com/app/data-bzfbr/endpoint/data/v1/action/find',body,
+    {headers: headers});
+  }
+
+  getAllItems(token:string): Observable<any> {
+    const headers = {
+      'content-type': 'application/json',
+      'access-control-request-headers': '*',
+      // 'api-key': 'kH03wCLH2g9ExTFTtJkLAQHvhdjEmQ2qotDWxliIB437S9inFLLvpjlJcqrq3cAX',
+      'authorization': 'Bearer ' + token,
+      'accept': 'application/json'
+    }
+
+    const body = JSON.stringify({
+      "dataSource": "MyStoreCluster",
+      "database": "MyStoreApp-Db",
+      "collection": "Products"
+    });
+
+    return this.http.post('https://data.mongodb-api.com/app/data-bzfbr/endpoint/data/v1/action/find',body,
+    {headers: headers});
+  }
+
+  createNewOrder(user_id:any,token: string): Observable<any> {
+    const headers = {
+      'content-type': 'application/json',
+      'access-control-request-headers': '*',
+      // 'api-key': 'kH03wCLH2g9ExTFTtJkLAQHvhdjEmQ2qotDWxliIB437S9inFLLvpjlJcqrq3cAX',
+      'authorization': 'Bearer ' + token,
+      'accept': 'application/json'
+    }
+
+    const body = JSON.stringify({
+      "dataSource": "MyStoreCluster",
+      "database": "MyStoreApp-Db",
+      "collection": "Orders",
+      "document": {
+        "status": "Active",
+        "user_id": user_id,
+        "total_quantity": 0,
+        "total_price": 0
+      }
+  });
+
+    return this.http.post('https://data.mongodb-api.com/app/data-bzfbr/endpoint/data/v1/action/insertOne',body,
+    {headers: headers});
+  }
+
+  updateNewOrderInfo(orderID:any,totalPrice:number,totalProducts:number,token:string): Observable<any> {
+    const headers = {
+      'content-type': 'application/json',
+      'access-control-request-headers': '*',
+      // 'api-key': 'kH03wCLH2g9ExTFTtJkLAQHvhdjEmQ2qotDWxliIB437S9inFLLvpjlJcqrq3cAX',
+      'authorization': 'Bearer ' + token,
+      'accept': 'application/json'
+    }
+
+    const body = JSON.stringify({
+      "dataSource": "MyStoreCluster",
+      "database": "MyStoreApp-Db",
+      "collection": "Orders",
+      "filter": {"_id": {"$oid": orderID.toString() }},
+    //   "update": { "$set": { "status": "Complete" } }
+      "update": { "$set": { "total_quantity": totalProducts , "total_price": totalPrice },}
+    });
+
+    return this.http.post('https://data.mongodb-api.com/app/data-bzfbr/endpoint/data/v1/action/updateOne',body,
+    {headers: headers});
+  }
+
+  updateNewOrderStatus(orderID:any,token:string): Observable<any> {
+    const headers = {
+      'content-type': 'application/json',
+      'access-control-request-headers': '*',
+      // 'api-key': 'kH03wCLH2g9ExTFTtJkLAQHvhdjEmQ2qotDWxliIB437S9inFLLvpjlJcqrq3cAX',
+      'authorization': 'Bearer ' + token,
+      'accept': 'application/json'
+    }
+
+    const body = JSON.stringify({
+      "dataSource": "MyStoreCluster",
+      "database": "MyStoreApp-Db",
+      "collection": "Orders",
+      "filter": {"_id": {"$oid": orderID }},
+    //   "update": { "$set": { "status": "Complete" } }
+      "update": { "$set": { "status": "Complete" } }
+    });
+
+    return this.http.post('https://data.mongodb-api.com/app/data-bzfbr/endpoint/data/v1/action/updateOne',body,
+    {headers: headers});
+  }
+
+  addNewOrders(name:string,price:BigInteger,quantity:string,url:string,description:string,token:string,status:string,orderId:any,product_id:any): Observable<any> {
 
     let user_id:any;
     if(localStorage.getItem('user_id')) {
@@ -219,15 +341,15 @@ export class ItemsService {
     const body = JSON.stringify({
       "dataSource": "MyStoreCluster",
       "database": "MyStoreApp-Db",
-      "collection": "Orders",
+      "collection": "OrderedProducts",
       "document": {
         "name": name,
         "price": price,
         "quantity": quantity,
         "url": url,
         "description": description,
-        "status": status,
-        "user_id": user_id
+        "order_id": orderId,
+        "product_id": product_id
       }
   });
 
@@ -235,7 +357,7 @@ export class ItemsService {
      {headers: headers});
   }
 
-  updateOrder(id:any,token:string): Observable<any> {
+  updateOrder(order_id:any,user_id:any,token:string): Observable<any> {
     const headers = {
       'content-type': 'application/json',
       'access-control-request-headers': '*',
@@ -248,13 +370,60 @@ export class ItemsService {
       "dataSource": "MyStoreCluster",
       "database": "MyStoreApp-Db",
       "collection": "Orders",
-      "filter": {"user_id": id.toString()},
+      "filter": {"_id": {"$oid": order_id }},
     //   "update": { "$set": { "status": "Complete" } }
-      "update": { "$set": { "status": "Complete" } }
+      "update": { "$set": { "user_id": user_id } }
     });
 
     
-    return this.http.post('https://data.mongodb-api.com/app/data-bzfbr/endpoint/data/v1/action/updateMany',body,
+    return this.http.post('https://data.mongodb-api.com/app/data-bzfbr/endpoint/data/v1/action/updateOne',body,
+     {headers: headers});
+  }
+
+  deleteItem(itemID:string,token:string): Observable<any> {
+    const headers = {
+      'content-type': 'application/json',
+      'access-control-request-headers': '*',
+      // 'api-key': 'kH03wCLH2g9ExTFTtJkLAQHvhdjEmQ2qotDWxliIB437S9inFLLvpjlJcqrq3cAX',
+      'authorization': 'Bearer ' + token,
+      'accept': 'application/json'
+    }
+
+    const body = JSON.stringify({
+      "dataSource": "MyStoreCluster",
+      "database": "MyStoreApp-Db",
+      "collection": "OrderedProducts",
+      "filter": {"_id": {"$oid": itemID }}
+    });
+
+    return this.http.post('https://data.mongodb-api.com/app/data-bzfbr/endpoint/data/v1/action/deleteOne',body,
+    {headers: headers});
+  }
+
+
+  makePayments(order_id:any,user_id:any,total_price:number,number_of_items:number,token:string): Observable<any> {
+    const headers = {
+      'content-type': 'application/json',
+      'access-control-request-headers': '*',
+      // 'api-key': 'kH03wCLH2g9ExTFTtJkLAQHvhdjEmQ2qotDWxliIB437S9inFLLvpjlJcqrq3cAX',
+      'authorization': 'Bearer ' + token,
+      'accept': 'application/json'
+    }
+
+    const body = JSON.stringify({
+      "dataSource": "MyStoreCluster",
+      "database": "MyStoreApp-Db",
+      "collection": "Payments",
+      "document": {
+        "order_id": order_id,
+        "user_id": user_id,
+        "number_of_items": number_of_items,
+        "total_price": total_price,
+        "status": "Pending"
+      }
+  });
+
+    return this.http.post('https://data.mongodb-api.com/app/data-bzfbr/endpoint/data/v1/action/insertOne',body,
      {headers: headers});
   }
 

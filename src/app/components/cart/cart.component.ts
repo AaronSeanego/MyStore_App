@@ -27,60 +27,98 @@ export class CartComponent {
   access_Token:any = [];
   data:any = [];
   numberOfOrder:number = 0;
+  checkedValue:string = '';
 
   constructor(public itemsService: ItemsService) {
 
   }
 
   ngOnInit(): void {
-    // this.itemsService.getOrders();
-    // this.madeOrders = this.itemsService.getOrders();
-    // console.log(this.madeOrders);
+    this.madeOrders = [];
+    // this.madeOrders.forEach((item:any) => {
+    //   this.totalPrice =+ item['price'] * parseInt(item['quantity']);
+    // });
 
-    this.madeOrders.forEach((item:any) => {
-      // console.log(item);
-      this.totalPrice =+ item['price'] * parseInt(item['quantity']);
-    });
+    // if(this.madeOrders.length == 0) {
+    //   document.querySelector(".text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: block;");
+    //   document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+    //   document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
+    //   document.querySelector(".sr-only")?.setAttribute("style","display: none");
+    // }
 
-    this.itemsService.getAccessToken().subscribe((token) => {
-      // console.log(token.access_token);
-      // this.access_Token.push(token);
-      this.itemsService.getAllOrders(token.access_token).subscribe((items:any) => {
-        console.log(items);
-        // console.log(items?.documents);
-        // this.madeOrders.push(items?.documents);
-        if(items?.documents.length > 0) {
-          for(let i = 0; i < items?.documents.length; i++) {
-            // console.log(items?.documents[i].status);
-            if(items?.documents[i].status == "Active") {
-              this.madeOrders.push(items?.documents[i]);
-              this.numberOfOrder = this.numberOfOrder + parseInt(items?.documents[i].quantity);
+    if(localStorage.getItem("orderID") == null || undefined) {
+
+      document.querySelector(".text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: block;");
+      document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+      document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
+      document.querySelector(".sr-only")?.setAttribute("style","display: none");
+    }else {
+      this.itemsService.getAccessToken().subscribe((token) => {
+        document.querySelector(".text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: none;");
+        document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
+        document.querySelector(".spinner-border")?.setAttribute("style", "margin-top: 300px;");
+        this.itemsService.getAllNewOrders(localStorage.getItem("orderID"),token.access_token).subscribe(data => {
+          
+          for(let i = 0;i < data?.documents.length;i++) {
+            if(data?.documents[i]._id == localStorage.getItem("orderID") && data?.documents[i].status == "Active") {
+              this.checkedValue = 'true';
+            }else {
+              this.checkedValue = 'false';
             }
           }
-        }else {
-          document.querySelector(".card .text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: none;");
-        }
+  
+          if(this.checkedValue == "true") {
+            this.itemsService.getAllOrders(token.access_token).subscribe((items:any) => {
+              if(items?.documents.length > 0) {
+                document.querySelector(".text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: none;");
+                document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+                document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0.5);z-index: 0;");
+                document.querySelector(".sr-only")?.setAttribute("style","display: none;z-index: 0;");
+                for(let i = 0; i < items?.documents.length; i++) {
+                  if(items?.documents[i].order_id == localStorage.getItem("orderID")) {
+                    this.madeOrders.push(items?.documents[i]);
+                    this.numberOfOrder = this.numberOfOrder + parseInt(items?.documents[i].quantity);
+                    this.totalPrice = this.totalPrice + items?.documents[i].price;
+                  }
+                }
 
-        // this.newOrders.push(items);
-        // console.log(this.newOrders);
-        // this.newOrders.forEach((item:any) => {
-        //   this.data.push(item);
-        //   // console.log(this.data);
-        // });
+              }else {
+                document.querySelector(".text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: block;");
+                document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+                document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
+                document.querySelector(".sr-only")?.setAttribute("style","display: none");
+                
+              }
+              this.totalPrice = parseFloat((this.totalPrice * this.numberOfOrder).toFixed(4));
+              this.itemsService.updateNewOrderInfo(localStorage.getItem("orderID"),this.totalPrice,this.numberOfOrder,token.access_token).subscribe(data => {
+                console.log(data);
+              });
+            });
+          }else {
+            document.querySelector(".card .text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: block;");
+          }
+        });
+  
+      });
+    }
+
+  }
+
+  deleteItem(itemID:string): void {
+    document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
+    document.querySelector(".spinner-border")?.setAttribute("style", "margin-top: 300px;");
+    this.itemsService.getAccessToken().subscribe((token) => {
+      this.itemsService.deleteItem(itemID,token.access_token).subscribe((response) => {
+        // console.log(response);
+        if(response) {
+          this.ngOnInit();
+          document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+          document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0.5);z-index: 0;");
+          document.querySelector(".sr-only")?.setAttribute("style","display: none;z-index: 0;");
+          alert("Item removed successfully from the list");
+        }
       });
     });
-
-    console.log(this.madeOrders);
-
-    // console.log(this.access_Token);
-    // this.itemsService.setWebToken(this.access_Token);
-
-    this.itemsService.getOrders().forEach((elm:any) => {
-      // this.numberOfOrder = this.numberOfOrder + parseInt(elm['quantity']);
-      // console.log(elm['quantity']);
-      // console.log(elm);
-      // console.log(parseInt(elm['quantity']));
-    });
-
+    
   }
 }

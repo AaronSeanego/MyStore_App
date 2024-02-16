@@ -13,6 +13,8 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { Users } from './models/users';
+import { PaymentDetailsComponent } from './components/payment-details/payment-details.component';
+// import { MongoClient } from 'mongodb';
 
 @Component({
   selector: 'app-root',
@@ -30,7 +32,8 @@ import { Users } from './models/users';
     SideMenuComponent,
     RouterModule,
     FormsModule,
-    CheckoutComponent
+    CheckoutComponent,
+    PaymentDetailsComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

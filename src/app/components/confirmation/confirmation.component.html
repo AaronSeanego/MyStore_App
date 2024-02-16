@@ -1,7 +1,14 @@
+<div class="d-flex justify-content-center" style="background-color: rgba(0,0,0,0.3);
+display:flex;position:absolute;width: 100%;height: 100%;z-index: 999;margin-top: 0px;">
+    <div class="spinner-border" role="status" style="margin-top: 300px;">
+      <span class="sr-only"></span>
+    </div>
+</div>
+
 <div class = "main">
     <div class = "content">
         <div class = "checkout-wrapper">
-            <div class="card text-center" style="width: 400px;margin: 100px auto;">
+            <div class="card text-center" style="width: 400px;margin: 0px auto;top: 100px;">
                 <div class="card-header">
                   Order Summary
                 </div>
@@ -10,12 +17,19 @@
                   <p class="card-text">The order was checkout successfully. Your order will be delivered to you.</p>
                   <p class="card-text" style="font-weight: bold;">Number Of Items: {{ numberOfItems }}</p>
                   <p class="card-text" style="font-weight: bold;">Total Price: ${{ totalPrice }}</p>
-                  <a href="#" [routerLink]="['/']" class="btn btn-primary">
+                  <!-- <a href="#" [routerLink]="['/']" class="btn btn-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
                         <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
                       </svg>
                     Home
-                  </a>
+                  </a> -->
+
+                  <button type="button" (click) = "competeOrder()" [routerLink]="['/']" class="btn btn-primary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+                      <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
+                    </svg>
+                    Home
+                  </button>
                 </div>
                 <!-- <div class="card-footer text-body-secondary">
                   2 days ago

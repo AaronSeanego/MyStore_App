@@ -1,3 +1,10 @@
+<div class="d-flex justify-content-center" style="background-color: rgba(0,0,0,0.3);
+display: none;position: absolute;width: 100%;height: 100%;z-index: 999;">
+    <div class="spinner-border" role="status" style="margin-top: 300px;">
+      <span class="sr-only"></span>
+    </div>
+</div>
+
 <app-header [totalOrders] = "numberOfOrder"></app-header>
 
 <div class = "main">
@@ -70,13 +77,16 @@
           <div class = "items-wrapper">
             <div class = "items-container" style="display: none;">
               <div class = "button" style="margin: 20px;">
-                <button type="button" class="btn btn-primary btn-sm" (click)="checkoutItems()">Checkout 
+                <button type="button" class="btn btn-primary btn-sm" style="z-index: 10;" (click)="checkoutItems()">Checkout 
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/>
                   </svg>
                 </button>
               </div>
 
+              <div>
+                <hr/>
+              </div>
               <div class="row row-cols-1 row-cols-md-6 g-4">
                 @for (item of ordersList; track $index) {
                   <div class="col">
@@ -92,6 +102,7 @@
               </div>
             </div>
           </div>
+
         </div>
     </div>
 </div>
