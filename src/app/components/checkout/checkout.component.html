@@ -17,12 +17,12 @@ display: none;position: absolute;width: 100%;height: 100%;z-index: 999;">
               <form #signInForm = "ngForm">
                 <div class="mb-3">
                   <label for="exampleInputEmail1" class="form-label">Email address</label>
-                  <input type="email" name = "User_Email" required [(ngModel)]="user_email" #User_Email = "ngModel" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                  <input type="email" name = "User_Email" required [(ngModel)]="user_email" #User_Email = "ngModel" (ngModelChange)="onChange($event)" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                   <div id="emailHelp" class="form-text" *ngIf="User_Email.invalid">Please enter your email address</div>
                 </div>
                 <div class="mb-3">
                   <label for="exampleInputPassword1" class="form-label">Password</label>
-                  <input type="password" name = "User_Password" required [(ngModel)]="user_password" #User_Password = "ngModel" class="form-control" id="exampleInputPassword1">
+                  <input type="password" name = "User_Password" required [(ngModel)]="user_password" #User_Password = "ngModel" (ngModelChange)="onChange($event)" class="form-control" id="exampleInputPassword1">
                   <div id="emailHelp" class="form-text" *ngIf="User_Password.invalid">Please enter your password</div>
                 </div>
                 <button type="submit" class="btn btn-primary" [disabled]="signInForm.invalid"  (click)="signIn()">Login</button>
@@ -42,17 +42,17 @@ display: none;position: absolute;width: 100%;height: 100%;z-index: 999;">
               <form #loginForm = "ngForm" (ngSubmit)="registerName()">
                 <div class="mb-3">
                   <label for="exampleInputFirstName1" class="form-label">First Name</label>
-                  <input type="text" class="form-control" required name = "FirstName" [(ngModel)]="firstName" #FirstName = "ngModel" id="exampleInputFirstName1" aria-describedby="FirstNameHelp">
+                  <input type="text" class="form-control" required name = "FirstName" [(ngModel)]="firstName" #FirstName = "ngModel" (ngModelChange)="onChange($event)" id="exampleInputFirstName1" aria-describedby="FirstNameHelp">
                   <div id="FirstNameHelp" class="form-text" *ngIf="FirstName.invalid">Please Enter Your First Name</div>
                 </div>
                 <div class="mb-3">
                   <label for="exampleInputLastName1" class="form-label">Last Name</label>
-                  <input type="text" class="form-control" required name = "LastName" [(ngModel)]="lastName" #LastName = "ngModel" id="exampleInputLastName1" aria-describedby="LastNameHelp">
+                  <input type="text" class="form-control" required name = "LastName" [(ngModel)]="lastName" #LastName = "ngModel" (ngModelChange)="onChange($event)" id="exampleInputLastName1" aria-describedby="LastNameHelp">
                   <div id="LastNameHelp" class="form-text" *ngIf="LastName.invalid">Please Enter Your Last Name</div>
                 </div>
                 <div class="mb-3">
                   <label for="exampleInputEmail1" class="form-label">Email Address</label>
-                  <input type="email" class="form-control" required name = "Email" [(ngModel)]="email" #Email = "ngModel" id="exampleInputEmail1" aria-describedby="emailHelp">
+                  <input type="email" class="form-control" required name = "Email" [(ngModel)]="email" #Email = "ngModel" (ngModelChange)="onChange($event)" id="exampleInputEmail1" aria-describedby="emailHelp">
                   <div id="emailHelp" class="form-text" *ngIf="Email.invalid">Please Enter Your Email Address</div>
                 </div>
                 <div class="mb-3">
@@ -61,7 +61,7 @@ display: none;position: absolute;width: 100%;height: 100%;z-index: 999;">
                 </div>
                 <div class="mb-3">
                   <label for="floatingTextarea2">Address</label>
-                  <textarea class="form-control" name = "PhysicalAddress" [(ngModel)]="physicaladdress" #PhysicalAddress = "ngModel" placeholder="Physical Address" id="floatingTextarea2" style="height: 100px"></textarea>
+                  <textarea class="form-control" name = "PhysicalAddress" [(ngModel)]="physicaladdress" #PhysicalAddress = "ngModel" (ngModelChange)="onChange($event)" placeholder="Physical Address" id="floatingTextarea2" style="height: 100px"></textarea>
                   <!-- <div id="emailHelp" class="form-text" *ngIf="FirstName.invalid">Please Enter Your First Name</div> -->
                 </div>
 

@@ -26,22 +26,22 @@ display: none;position: absolute;width: 100%;height: 100%;z-index: 999;">
 
                     <div class="mb-3">
                       <label for="exampleInputCardNumber1" class="form-label">Card Number</label>
-                      <input type="number" class="form-control" required maxlength="16" name = "Card_Number" [(ngModel)] = "card_number" #Card_Number = "ngModel" id="exampleInputCardNumber1" aria-describedby="CardNumberHelp">
+                      <input type="number" class="form-control" required maxlength="16" name = "Card_Number" [(ngModel)] = "card_number" #Card_Number = "ngModel" (ngModelChange)="onChange($event)" id="exampleInputCardNumber1" aria-describedby="CardNumberHelp">
                       <div id="emailHelp" class="form-text" *ngIf="Card_Number.invalid">Please Enter Your Card Number</div>
                     </div>
                     <div class="mb-3">
                       <label for="exampleInputExpDate1" class="form-label">Exp Date</label>
-                      <input type="text" class="form-control" required name = "Exp_Date" [(ngModel)] = "exp_date" #Exp_Date = "ngModel" id="exampleInputExpDate1" aria-describedby="ExpDateHelp">
+                      <input type="text" class="form-control" required name = "Exp_Date" [(ngModel)] = "exp_date" #Exp_Date = "ngModel" (ngModelChange)="onChange($event)" id="exampleInputExpDate1" aria-describedby="ExpDateHelp">
                       <div id="emailHelp" class="form-text" *ngIf="Exp_Date.invalid">Please Enter Your Card Expiration Date</div>
                     </div>
                     <div class="mb-3">
                       <label for="exampleInputCVCNumber1" class="form-label">CVC Date</label>
-                      <input type="number" class="form-control" required name = "CVC_Number" [(ngModel)] = "cvc_number" #CVC_Number = "ngModel" id="exampleInputCVCNumber1" aria-describedby="CVCNumberHelp">
+                      <input type="number" class="form-control" required name = "CVC_Number" [(ngModel)] = "cvc_number" #CVC_Number = "ngModel" (ngModelChange)="onChange($event)" id="exampleInputCVCNumber1" aria-describedby="CVCNumberHelp">
                       <div id="emailHelp" class="form-text" *ngIf="CVC_Number.invalid">Please Enter Your Card Security Number</div>
                     </div>
                     <div class="mb-3">
                       <label for="exampleInputAccountHolder1" class="form-label">Account Holder</label>
-                      <input type="number" class="form-control" required name = "Account_Holder" [(ngModel)] = "account_holder" #Account_Holder = "ngModel" id="exampleInputAccountHolder1">
+                      <input type="number" class="form-control" required name = "Account_Holder" [(ngModel)] = "account_holder" #Account_Holder = "ngModel" (ngModelChange)="onChange($event)" id="exampleInputAccountHolder1">
                       <div id="emailHelp" class="form-text" *ngIf="Account_Holder.invalid">Please Enter Your Card Security Number</div>
                     </div>
 

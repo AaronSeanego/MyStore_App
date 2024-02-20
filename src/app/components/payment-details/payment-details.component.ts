@@ -29,15 +29,24 @@ export class PaymentDetailsComponent {
   numberOfItems:number = 0;
   checkedValue:string = '';
   clearOrder:any = "";
+
+  orders_ID:any;
+  users_ID:any;
   constructor(private itemService: ItemsService,private router: Router) {
 
   }
 
   ngOnInit(): void {
+
+    if (typeof window !== 'undefined') {
+      this.orders_ID = localStorage.getItem('orderID');
+      this.users_ID = localStorage.getItem('user_id');
+    }
+
     this.itemService.getAccessToken().subscribe((token) => {
-      this.itemService.getAllNewOrders(localStorage.getItem("orderID"),token.access_token).subscribe(data => {
+      this.itemService.getAllNewOrders(this.orders_ID,token.access_token).subscribe(data => {
         for(let i = 0;i < data?.documents.length;i++) {
-          if(data?.documents[i]._id == localStorage.getItem("orderID") && data?.documents[i].status == "Complete") {
+          if(data?.documents[i]._id == this.orders_ID && data?.documents[i].status == "Complete") {
             this.checkedValue = 'true';
           }else {
             this.checkedValue = 'false';
@@ -48,7 +57,7 @@ export class PaymentDetailsComponent {
           this.itemService.getAllOrders(token.access_token).subscribe((items:any) => {
             if(items?.documents.length > 0) {
               for(let i = 0; i < items?.documents.length; i++) {
-                if(items?.documents[i].order_id == localStorage.getItem("orderID")) {
+                if(items?.documents[i].order_id == this.orders_ID) {
                   this.numberOfItems = this.numberOfItems + parseInt(items?.documents[i].quantity);
                   this.totalPrice = this.totalPrice + items?.documents[i].price;
                 }
@@ -76,7 +85,7 @@ export class PaymentDetailsComponent {
     document.querySelector(".spinner-border")?.setAttribute("style", "margin-top: 300px;");
 
     this.itemService.getAccessToken().subscribe((token) => {
-      this.itemService.makePayments(localStorage.getItem("orderID"),localStorage.getItem("user_id"),this.totalPrice,this.numberOfItems,token.access_token).subscribe(paymentResponse => {
+      this.itemService.makePayments(this.orders_ID,this.users_ID,this.totalPrice,this.numberOfItems,token.access_token).subscribe(paymentResponse => {
         if(paymentResponse) {
           document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
           document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
@@ -87,5 +96,11 @@ export class PaymentDetailsComponent {
       });
     });
     
+  }
+
+
+  onChange(event:any): void {
+    console.log(event);
+    console.log("Entered data change");
   }
 }

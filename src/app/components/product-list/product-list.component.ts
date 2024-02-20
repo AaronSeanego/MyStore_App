@@ -1,5 +1,5 @@
-import { Component, Input} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Inject, Input} from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../layout/header/header.component';
 import { RouterLink,RouterLinkActive, RouterModule } from '@angular/router';
@@ -38,14 +38,22 @@ export class ProductListComponent {
   checkedValue:string = '';
   listOfIDs:any = [];
 
-  constructor (public itemsService: ItemsService,private router: Router) {
+  orders_ID:any;
+  users_ID:any;
+  constructor (@Inject(DOCUMENT) private document: Document,public itemsService: ItemsService,private router: Router) {
 
   }
 
   ngOnInit():void {
+
+    if (typeof window !== 'undefined') {
+      this.orders_ID = localStorage.getItem('orderID');
+      this.users_ID = localStorage.getItem('user_id');
+    }
+
     this.itemsService.getProducts().subscribe(products => {
       this.productList = products;
-
+      
       if(this.productList.length > 0) {
         document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 100%;height: 100%;z-index: 0;");
         document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
@@ -67,13 +75,13 @@ export class ProductListComponent {
         // console.log(this.productList);
       });
 
-      if(localStorage.getItem("orderID") == null || undefined) {
+      if(this.orders_ID == null || undefined) {
         
       }else {
         this.itemsService.getAllOrders(token.access_token).subscribe((items:any) => {
           if(items?.documents.length > 0) {
             for(let i = 0; i < items?.documents.length; i++) {
-              if(items?.documents[i].order_id == localStorage.getItem("orderID")) {
+              if(items?.documents[i].order_id == this.orders_ID) {
                 this.numberOfOrder = this.numberOfOrder + parseInt(items?.documents[i].quantity);
               }
             }
@@ -110,7 +118,7 @@ export class ProductListComponent {
       });
     });
 
-    console.log(this.searchTerm);
+    // console.log(this.searchTerm);
     // this.itemsService.setSearchResults(this.searchTerm);
     this.router.navigate(['/product-item']);
   }

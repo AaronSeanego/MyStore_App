@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { Users } from './models/users';
 import { PaymentDetailsComponent } from './components/payment-details/payment-details.component';
+import { DOCUMENT } from '@angular/common';
 // import { MongoClient } from 'mongodb';
 
 @Component({

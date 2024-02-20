@@ -22,12 +22,20 @@ export class ConfirmationComponent {
   numberOfItems:number = 0;
   checkedValue:string = '';
   clearOrder:any = "";
+
+  orders_ID:any;
+  users_ID:any;
   constructor (public productService: ItemsService,private router: Router) {
   }
 
   ngOnInit():void {
 
-    if(localStorage.getItem("orderID") == null || undefined) {
+    if (typeof window !== 'undefined') {
+      this.orders_ID = localStorage.getItem('orderID');
+      this.users_ID = localStorage.getItem('user_id');
+    }
+
+    if(this.orders_ID == null || undefined) {
       this.router.navigate(['/']);
     }
     
@@ -43,9 +51,9 @@ export class ConfirmationComponent {
     });
 
     this.productService.getAccessToken().subscribe((token) => {
-      this.productService.getAllNewOrders(localStorage.getItem("orderID"),token.access_token).subscribe(data => {
+      this.productService.getAllNewOrders(this.orders_ID,token.access_token).subscribe(data => {
         for(let i = 0;i < data?.documents.length;i++) {
-          if(data?.documents[i]._id == localStorage.getItem("orderID") && data?.documents[i].status == "Complete") {
+          if(data?.documents[i]._id == this.orders_ID && data?.documents[i].status == "Complete") {
             this.checkedValue = 'true';
           }else {
             this.checkedValue = 'false';
@@ -56,7 +64,7 @@ export class ConfirmationComponent {
           this.productService.getAllOrders(token.access_token).subscribe((items:any) => {
             if(items?.documents.length > 0) {
               for(let i = 0; i < items?.documents.length; i++) {
-                if(items?.documents[i].order_id == localStorage.getItem("orderID")) {
+                if(items?.documents[i].order_id == this.orders_ID) {
                   this.numberOfItems = this.numberOfItems + parseInt(items?.documents[i].quantity);
                   this.totalPrice = this.totalPrice + items?.documents[i].price;
                 }
@@ -81,6 +89,6 @@ export class ConfirmationComponent {
 
   competeOrder():void {
     localStorage.removeItem("orderID");
-    localStorage.removeItem("user_id");
+    // localStorage.removeItem("user_id");
   }
 }
