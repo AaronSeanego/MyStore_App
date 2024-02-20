@@ -48,6 +48,14 @@ export class CheckoutComponent {
   checkedValue:string = '';
   totalPrice:number = 0;
 
+  d_flex_element:any;
+  spinner_border_element:any;
+  sr_only_element:any;
+  card_element:any;
+
+  signIn_element:any;
+  items_element:any;
+
   orders_ID:any;
   users_ID:any;
   constructor (public itemsService: ItemsService,private router: Router) {
@@ -61,14 +69,23 @@ export class CheckoutComponent {
       this.users_ID = localStorage.getItem('user_id');
     }
 
+    if (typeof document !== 'undefined') {
+      this.d_flex_element = document.querySelector('.d-flex');
+      this.spinner_border_element = document.querySelector(".spinner-border");
+      this.sr_only_element = document.querySelector(".sr-only");
+      this.card_element = document.querySelector(".card .text-center");
+      this.signIn_element = document.querySelector(".signIn-container");
+      this.items_element = document.querySelector(".items-container");
+  }
+
     if(this.orders_ID == null || undefined) {
       this.router.navigate(['/']);
     }
 
     if(this.users_ID != null || undefined) {
-      document.querySelector(".signIn-container")?.setAttribute("style", "display: none;");
-      document.querySelector(".card")?.setAttribute("style", "display: none;");
-      document.querySelector(".items-container")?.setAttribute("style", "display: block;margin-top: 20px");
+      this.signIn_element?.setAttribute("style", "display: none;");
+      this.card_element?.setAttribute("style", "display: none;");
+      this.items_element?.setAttribute("style", "display: block;margin-top: 20px");
     }else {
 
     }
@@ -101,14 +118,14 @@ export class CheckoutComponent {
                   this.totalPrice = this.totalPrice + items?.documents[i].price;
                 }
               }
-              document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
-              document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0);z-index: 0;");
-              document.querySelector(".sr-only")?.setAttribute("style","display: none;z-index: 0;");
+              this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+              this.spinner_border_element?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0);z-index: 0;");
+              this.sr_only_element?.setAttribute("style","display: none;z-index: 0;");
             }else {
-              document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
-              document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0);z-index: 0;");
-              document.querySelector(".sr-only")?.setAttribute("style","display: none;z-index: 0;");
-              document.querySelector(".card .text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: none;");
+              this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+              this.spinner_border_element?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0);z-index: 0;");
+              this.sr_only_element?.setAttribute("style","display: none;z-index: 0;");
+              this.card_element?.setAttribute("style", "margin: 100px auto;width: 500px;display: none;");
             }
             this.totalPrice = parseFloat((this.totalPrice * this.numberOfOrder).toFixed(4));
             this.itemsService.updateNewOrderInfo(this.orders_ID,this.totalPrice,this.numberOfOrder,token.access_token).subscribe(data => {
@@ -116,7 +133,7 @@ export class CheckoutComponent {
             });
           });
         }else {
-          document.querySelector(".card .text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: none;");
+          this.card_element?.setAttribute("style", "margin: 100px auto;width: 500px;display: none;");
         }
       });
 
@@ -124,8 +141,8 @@ export class CheckoutComponent {
   }
 
   registerName(): void {
-    document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
-    document.querySelector(".spinner-border")?.setAttribute("style", "margin-top: 300px;");
+    this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
+    this.spinner_border_element?.setAttribute("style", "margin-top: 300px;");
     this.usersInfor = this.itemsService.addUsers(this.firstName, this.lastName, this.email, this.password, this.physicaladdress);
 
     this.itemsService.addNewLogin(this.email,this.password).subscribe(data => {
@@ -138,14 +155,14 @@ export class CheckoutComponent {
         // console.log(usersData);
         if(usersData) {
 
-          document.querySelector(".card")?.setAttribute("style", "display: none;");
-          document.querySelector(".items-container")?.setAttribute("style", "display: block;margin-top: 20px");
+          this.card_element?.setAttribute("style", "display: none;");
+          this.items_element?.setAttribute("style", "display: block;margin-top: 20px");
           this.itemsService.updateOrder(this.orders_ID,usersData?.documents._id,accessToken.access_token).subscribe(updateResults => {
             console.log(updateResults);
           });
-          document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
-          document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0);z-index: 0;");
-          document.querySelector(".sr-only")?.setAttribute("style","display: none;z-index: 0;");
+          this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+          this.spinner_border_element?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0);z-index: 0;");
+          this.sr_only_element?.setAttribute("style","display: none;z-index: 0;");
           alert("Create account was created sucessfully.");
         }
       });
@@ -154,15 +171,15 @@ export class CheckoutComponent {
   }
 
   viewRegisterForm(): void {
-    document.querySelector(".signIn-container")?.setAttribute("style", "display: none;");
-    document.querySelector(".card")?.setAttribute("style", "display: block;margin: 100px auto;width: 30rem");
+    this.signIn_element?.setAttribute("style", "display: none;");
+    this.card_element?.setAttribute("style", "display: block;margin: 100px auto;width: 30rem");
   }
 
   signIn(): void {
 
       this.itemsService.getAccessToken().subscribe(accessToken => {
-        document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
-        document.querySelector(".spinner-border")?.setAttribute("style", "margin-top: 300px;");
+        this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
+        this.spinner_border_element?.setAttribute("style", "margin-top: 300px;");
         // console.log(accessToken.access_token);
         this.accessToken.push(accessToken.access_token);
         console.log(this.accessToken[0]);
@@ -172,11 +189,11 @@ export class CheckoutComponent {
 
           if(userResults == undefined) {
             alert("Username does not exist. Please register user");
-            document.querySelector(".signIn-container")?.setAttribute("style", "display: none;");
-            document.querySelector(".card")?.setAttribute("style", "display: block;margin: 100px auto;width: 30rem");
+            this.spinner_border_element?.setAttribute("style", "display: none;");
+            this.card_element?.setAttribute("style", "display: block;margin: 100px auto;width: 30rem");
           }else {
-            document.querySelector(".signIn-container")?.setAttribute("style", "display: none;");
-            document.querySelector(".items-container")?.setAttribute("style", "display: block;margin-top: 20px");
+            this.signIn_element?.setAttribute("style", "display: none;");
+            this.items_element?.setAttribute("style", "display: block;margin-top: 20px");
             // console.log(userResults?.document);
             // console.log(userResults?.document._id);
             this.loggedInEmail = userResults?.document.email;
@@ -191,9 +208,9 @@ export class CheckoutComponent {
             this.itemsService.updateOrder(this.orders_ID,this.users_ID,accessToken.access_token).subscribe(updateResults => {
               console.log(updateResults);
             });
-            document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
-            document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0);z-index: 0;");
-            document.querySelector(".sr-only")?.setAttribute("style","display: none;z-index: 0;");
+            this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+            this.spinner_border_element?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0);z-index: 0;");
+            this.sr_only_element?.setAttribute("style","display: none;z-index: 0;");
             alert("User logged in sucessfully.");
           }
         });
@@ -203,15 +220,15 @@ export class CheckoutComponent {
   checkoutItems(): void {
     // this.router.navigate(['/payment-details']);
     this.itemsService.getAccessToken().subscribe(accessToken => {
-      document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
-      document.querySelector(".spinner-border")?.setAttribute("style", "margin-top: 300px;");
+      this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
+      this.spinner_border_element?.setAttribute("style", "margin-top: 300px;");
       this.accessToken.push(accessToken.access_token);
 
       this.itemsService.updateNewOrderStatus(this.orders_ID,accessToken.access_token).subscribe(response => {
         if(response) {
-          document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
-          document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0);z-index: 0;");
-          document.querySelector(".sr-only")?.setAttribute("style","display: none;z-index: 0;");
+          this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+          this.spinner_border_element?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0);z-index: 0;");
+          this.sr_only_element?.setAttribute("style","display: none;z-index: 0;");
           this.router.navigate(['/payment-details']);
         }
       });

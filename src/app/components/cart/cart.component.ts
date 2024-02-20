@@ -29,6 +29,11 @@ export class CartComponent {
   numberOfOrder:number = 0;
   checkedValue:string = '';
 
+  d_flex_element:any;
+  spinner_border_element:any;
+  sr_only_element:any;
+  card_element:any;
+
   orders_ID:any;
   users_ID:any;
   constructor(public itemsService: ItemsService) {
@@ -40,6 +45,13 @@ export class CartComponent {
     if (typeof window !== 'undefined') {
       this.orders_ID = localStorage.getItem('orderID');
       this.users_ID = localStorage.getItem('user_id');
+    }
+
+    if (typeof document !== 'undefined') {
+      this.d_flex_element = document.querySelector('.d-flex');
+      this.spinner_border_element = document.querySelector(".spinner-border");
+      this.sr_only_element = document.querySelector(".sr-only");
+      this.card_element = document.querySelector(".card .text-center");
     }
 
     this.madeOrders = [];
@@ -56,15 +68,15 @@ export class CartComponent {
 
     if(this.orders_ID == null || undefined) {
 
-      document.querySelector(".text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: block;");
-      document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
-      document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
-      document.querySelector(".sr-only")?.setAttribute("style","display: none");
+      this.card_element?.setAttribute("style", "margin: 100px auto;width: 500px;display: block;");
+      this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+      this.spinner_border_element?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
+      this.sr_only_element?.setAttribute("style","display: none");
     }else {
       this.itemsService.getAccessToken().subscribe((token) => {
-        document.querySelector(".text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: none;");
-        document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
-        document.querySelector(".spinner-border")?.setAttribute("style", "margin-top: 300px;");
+        this.card_element?.setAttribute("style", "margin: 100px auto;width: 500px;display: none;");
+        this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
+        this.spinner_border_element?.setAttribute("style", "margin-top: 300px;");
         this.itemsService.getAllNewOrders(this.orders_ID,token.access_token).subscribe(data => {
           
           for(let i = 0;i < data?.documents.length;i++) {
@@ -78,10 +90,10 @@ export class CartComponent {
           if(this.checkedValue == "true") {
             this.itemsService.getAllOrders(token.access_token).subscribe((items:any) => {
               if(items?.documents.length > 0) {
-                document.querySelector(".text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: none;");
-                document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
-                document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0.5);z-index: 0;");
-                document.querySelector(".sr-only")?.setAttribute("style","display: none;z-index: 0;");
+                this.card_element?.setAttribute("style", "margin: 100px auto;width: 500px;display: none;");
+                this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+                this.spinner_border_element?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0.5);z-index: 0;");
+                this.sr_only_element?.setAttribute("style","display: none;z-index: 0;");
                 for(let i = 0; i < items?.documents.length; i++) {
                   if(items?.documents[i].order_id == this.orders_ID) {
                     this.madeOrders.push(items?.documents[i]);
@@ -91,10 +103,10 @@ export class CartComponent {
                 }
 
               }else {
-                document.querySelector(".text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: block;");
-                document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
-                document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
-                document.querySelector(".sr-only")?.setAttribute("style","display: none");
+                this.card_element?.setAttribute("style", "margin: 100px auto;width: 500px;display: block;");
+                this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+                this.spinner_border_element?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
+                this.sr_only_element?.setAttribute("style","display: none");
                 
               }
               this.totalPrice = parseFloat((this.totalPrice * this.numberOfOrder).toFixed(4));
@@ -103,7 +115,7 @@ export class CartComponent {
               });
             });
           }else {
-            document.querySelector(".card .text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: block;");
+            this.card_element?.setAttribute("style", "margin: 100px auto;width: 500px;display: block;");
           }
         });
   
@@ -113,16 +125,16 @@ export class CartComponent {
   }
 
   deleteItem(itemID:string): void {
-    document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
-    document.querySelector(".spinner-border")?.setAttribute("style", "margin-top: 300px;");
+    this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
+    this.spinner_border_element?.setAttribute("style", "margin-top: 300px;");
     this.itemsService.getAccessToken().subscribe((token) => {
       this.itemsService.deleteItem(itemID,token.access_token).subscribe((response) => {
         // console.log(response);
         if(response) {
           this.ngOnInit();
-          document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
-          document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0.5);z-index: 0;");
-          document.querySelector(".sr-only")?.setAttribute("style","display: none;z-index: 0;");
+          this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+          this.spinner_border_element?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0.5);z-index: 0;");
+          this.sr_only_element?.setAttribute("style","display: none;z-index: 0;");
           alert("Item removed successfully from the list");
         }
       });

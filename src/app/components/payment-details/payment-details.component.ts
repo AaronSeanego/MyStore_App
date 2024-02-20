@@ -30,6 +30,11 @@ export class PaymentDetailsComponent {
   checkedValue:string = '';
   clearOrder:any = "";
 
+  d_flex_element:any;
+  spinner_border_element:any;
+  sr_only_element:any;
+  card_element:any;
+
   orders_ID:any;
   users_ID:any;
   constructor(private itemService: ItemsService,private router: Router) {
@@ -42,6 +47,13 @@ export class PaymentDetailsComponent {
       this.orders_ID = localStorage.getItem('orderID');
       this.users_ID = localStorage.getItem('user_id');
     }
+
+    if (typeof document !== 'undefined') {
+      this.d_flex_element = document.querySelector('.d-flex');
+      this.spinner_border_element = document.querySelector(".spinner-border");
+      this.sr_only_element = document.querySelector(".sr-only");
+      this.card_element = document.querySelector(".card .text-center");
+  }
 
     this.itemService.getAccessToken().subscribe((token) => {
       this.itemService.getAllNewOrders(this.orders_ID,token.access_token).subscribe(data => {
@@ -62,14 +74,14 @@ export class PaymentDetailsComponent {
                   this.totalPrice = this.totalPrice + items?.documents[i].price;
                 }
               }
-              document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
-              document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
-              document.querySelector(".sr-only")?.setAttribute("style","display: none");
+              this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+              this.spinner_border_element?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
+              this.sr_only_element?.setAttribute("style","display: none");
             }else {
-              document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
-              document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
-              document.querySelector(".sr-only")?.setAttribute("style","display: none");
-              document.querySelector(".card .text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: none;");
+              this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+              this.spinner_border_element?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
+              this.sr_only_element?.setAttribute("style","display: none");
+              this.card_element?.setAttribute("style", "margin: 100px auto;width: 500px;display: none;");
             }
             this.totalPrice = parseFloat((this.totalPrice * this.numberOfItems).toFixed(4));
           });
@@ -81,15 +93,15 @@ export class PaymentDetailsComponent {
   }
 
   newPayments(): void {
-    document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
-    document.querySelector(".spinner-border")?.setAttribute("style", "margin-top: 300px;");
+    this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
+    this.spinner_border_element?.setAttribute("style", "margin-top: 300px;");
 
     this.itemService.getAccessToken().subscribe((token) => {
       this.itemService.makePayments(this.orders_ID,this.users_ID,this.totalPrice,this.numberOfItems,token.access_token).subscribe(paymentResponse => {
         if(paymentResponse) {
-          document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
-          document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
-          document.querySelector(".sr-only")?.setAttribute("style","display: none");
+          this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
+          this.spinner_border_element?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
+          this.sr_only_element?.setAttribute("style","display: none");
           alert("Payment of $" + this.totalPrice + " was made successfully.");
           this.router.navigate(['/confirmation']);
         }

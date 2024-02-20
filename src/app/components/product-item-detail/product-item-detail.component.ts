@@ -30,6 +30,11 @@ export class ProductItemDetailComponent {
   accessToken:any = [];
   results:any = [];
   numberOfOrder:number = 0;
+  
+  d_flex_element:any;
+  spinner_border_element:any;
+  sr_only_element:any;
+  card_element:any;
 
   orders_ID:any;
   users_ID:any;
@@ -44,6 +49,13 @@ export class ProductItemDetailComponent {
       this.users_ID = localStorage.getItem('user_id');
     }
 
+    if (typeof document !== 'undefined') {
+      this.d_flex_element = document.querySelector('.d-flex');
+      this.spinner_border_element = document.querySelector(".spinner-border");
+      this.sr_only_element = document.querySelector(".sr-only");
+      this.card_element = document.querySelector(".card .text-center");
+    }
+  
     this.route.params.subscribe(params => {
       this.id = params['id'];
       localStorage.setItem("productId",this.id);
@@ -56,9 +68,9 @@ export class ProductItemDetailComponent {
         if(item['id'] == parseInt(this.id)) {
           this.product.push(item);
           if(this.product.length > 0) {
-            document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 100%;height: 100%;z-index: 0;");
-            document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
-            document.querySelector(".sr-only")?.setAttribute("style","display: none");
+            this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 100%;height: 100%;z-index: 0;");
+            this.spinner_border_element?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
+            this.sr_only_element?.setAttribute("style","display: none");
           }else {
             
           }
@@ -89,7 +101,7 @@ export class ProductItemDetailComponent {
               }
             }
           }else {
-            document.querySelector(".card .text-center")?.setAttribute("style", "margin: 100px auto;width: 500px;display: none;");
+            this.card_element?.setAttribute("style", "margin: 100px auto;width: 500px;display: none;");
           }
   
         });
@@ -122,9 +134,9 @@ export class ProductItemDetailComponent {
       this.accessToken.push(accessToken.access_token);
 
       if(this.orders_ID == null || undefined) {
-        document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
-        document.querySelector(".spinner-border")?.setAttribute("style", "margin-top: 300px;");
-        document.querySelector(".sr-only")?.setAttribute("style","display: flex");
+        this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
+        this.spinner_border_element?.setAttribute("style", "margin-top: 300px;");
+        this.sr_only_element?.setAttribute("style","display: flex");
         this.itemsService.createNewOrder(this.users_ID,accessToken.access_token).subscribe(tokenData => {
           console.log(tokenData?.insertedId);
           localStorage.setItem("orderID",tokenData?.insertedId);
@@ -133,27 +145,27 @@ export class ProductItemDetailComponent {
             console.log(response);
             if(response) {
               // this.router.navigate(['/cart']);
-              document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 100%;height: 100%;z-index: 0;");
-              document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
-              document.querySelector(".sr-only")?.setAttribute("style","display: none");
+              this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 100%;height: 100%;z-index: 0;");
+              this.spinner_border_element?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
+              this.sr_only_element?.setAttribute("style","display: none");
               alert("New item was successfully added to cart. Please navigate to the cart to checkout.");
               this.router.navigate(['/cart']);
             }
           });
         });
       }else {
-        document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
-        document.querySelector(".spinner-border")?.setAttribute("style", "margin-top: 300px;");
-        document.querySelector(".sr-only")?.setAttribute("style","display: flex");
+        this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
+        this.spinner_border_element?.setAttribute("style", "margin-top: 300px;");
+        this.sr_only_element?.setAttribute("style","display: flex");
         this.itemsService.searchOrder(this.orders_ID,accessToken.access_token).subscribe(orderData => {
           // console.log(orderData?.insertedId);
           this.itemsService.addNewOrders(name,price,this.quantity,url,description,this.accessToken[0],status,this.orders_ID,localStorage.getItem("productId")).subscribe(response => {
             // this.results.push(response);
             console.log(response);
             if(response) {
-              document.querySelector(".d-flex")?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 100%;height: 100%;z-index: 0;");
-              document.querySelector(".spinner-border")?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
-              document.querySelector(".sr-only")?.setAttribute("style","display: none");
+              this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 100%;height: 100%;z-index: 0;");
+              this.spinner_border_element?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
+              this.sr_only_element?.setAttribute("style","display: none");
               alert("New order with order number " + orderData?.insertedId + " was created successfully. Please navigate to the cart to checkout.");
               this.router.navigate(['/cart']);
             }
