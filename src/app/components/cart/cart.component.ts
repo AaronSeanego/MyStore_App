@@ -97,8 +97,10 @@ export class CartComponent {
                 for(let i = 0; i < items?.documents.length; i++) {
                   if(items?.documents[i].order_id == this.orders_ID) {
                     this.madeOrders.push(items?.documents[i]);
+                    // this.numberOfOrder = this.numberOfOrder + parseInt(items?.documents[i].quantity);
                     this.numberOfOrder = this.numberOfOrder + parseInt(items?.documents[i].quantity);
-                    this.totalPrice = this.totalPrice + items?.documents[i].price;
+                    // this.totalPrice = this.totalPrice + items?.documents[i].price;
+                    this.totalPrice = parseFloat(this.totalPrice + (items?.documents[i].price * parseInt(items?.documents[i].quantity)).toFixed(4));
                   }
                 }
 
@@ -109,7 +111,7 @@ export class CartComponent {
                 this.sr_only_element?.setAttribute("style","display: none");
                 
               }
-              this.totalPrice = parseFloat((this.totalPrice * this.numberOfOrder).toFixed(4));
+              // this.totalPrice = parseFloat((this.totalPrice * this.numberOfOrder).toFixed(4));
               this.itemsService.updateNewOrderInfo(this.orders_ID,this.totalPrice,this.numberOfOrder,token.access_token).subscribe(data => {
                 console.log(data);
               });
@@ -122,6 +124,7 @@ export class CartComponent {
       });
     }
 
+    //  console.log(this.madeOrders);
   }
 
   deleteItem(itemID:string): void {

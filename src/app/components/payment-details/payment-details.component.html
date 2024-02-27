@@ -35,13 +35,13 @@ display: none;position: absolute;width: 100%;height: 100%;z-index: 999;">
                       <div id="emailHelp" class="form-text" *ngIf="Exp_Date.invalid">Please Enter Your Card Expiration Date</div>
                     </div>
                     <div class="mb-3">
-                      <label for="exampleInputCVCNumber1" class="form-label">CVC Date</label>
+                      <label for="exampleInputCVCNumber1" class="form-label">CVC Number</label>
                       <input type="number" class="form-control" required name = "CVC_Number" [(ngModel)] = "cvc_number" #CVC_Number = "ngModel" (ngModelChange)="onChange($event)" id="exampleInputCVCNumber1" aria-describedby="CVCNumberHelp">
                       <div id="emailHelp" class="form-text" *ngIf="CVC_Number.invalid">Please Enter Your Card Security Number</div>
                     </div>
                     <div class="mb-3">
                       <label for="exampleInputAccountHolder1" class="form-label">Account Holder</label>
-                      <input type="number" class="form-control" required name = "Account_Holder" [(ngModel)] = "account_holder" #Account_Holder = "ngModel" (ngModelChange)="onChange($event)" id="exampleInputAccountHolder1">
+                      <input type="text" class="form-control" required name = "Account_Holder" [(ngModel)] = "account_holder" #Account_Holder = "ngModel" (ngModelChange)="onChange($event)" id="exampleInputAccountHolder1">
                       <div id="emailHelp" class="form-text" *ngIf="Account_Holder.invalid">Please Enter Your Card Security Number</div>
                     </div>
 

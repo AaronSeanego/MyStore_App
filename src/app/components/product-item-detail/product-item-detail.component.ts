@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { ItemsService } from '../../services/items.service';
 import { Router } from '@angular/router';
 import { Product } from '../../models/products';
+import { response } from 'express';
 
 @Component({
   selector: 'app-product-item-detail',
@@ -90,7 +91,7 @@ export class ProductItemDetailComponent {
       //     // }
       //   });
       // });
-      if(this.orders_ID == null || undefined) {
+      if(localStorage.getItem('orderID') == null || undefined) {
         
       }else {
         this.itemsService.getAllOrders(token.access_token).subscribe((items:any) => {
@@ -140,19 +141,22 @@ export class ProductItemDetailComponent {
         this.itemsService.createNewOrder(this.users_ID,accessToken.access_token).subscribe(tokenData => {
           console.log(tokenData?.insertedId);
           localStorage.setItem("orderID",tokenData?.insertedId);
-          this.itemsService.addNewOrders(name,price,this.quantity,url,description,this.accessToken[0],status,this.orders_ID,localStorage.getItem("productId")).subscribe(response => {
-            // this.results.push(response);
-            console.log(response);
-            if(response) {
-              // this.router.navigate(['/cart']);
-              this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 100%;height: 100%;z-index: 0;");
-              this.spinner_border_element?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
-              this.sr_only_element?.setAttribute("style","display: none");
-              alert("New item was successfully added to cart. Please navigate to the cart to checkout.");
-              this.router.navigate(['/cart']);
-            }
-          });
+          if(response) {
+            this.itemsService.addNewOrders(name,price,this.quantity,url,description,this.accessToken[0],status,this.orders_ID,localStorage.getItem("productId")).subscribe(response => {
+              // this.results.push(response);
+              console.log(response);
+              if(response) {
+                // this.router.navigate(['/cart']);
+                this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 100%;height: 100%;z-index: 0;");
+                this.spinner_border_element?.setAttribute("style", "display: none;background-color: rgba(0,0,0,0)");
+                this.sr_only_element?.setAttribute("style","display: none");
+                alert("New item was successfully added to cart. Please navigate to the cart to checkout.");
+                this.router.navigate(['/cart']);
+              }
+            });
+          }
         });
+
       }else {
         this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0.3);display: none;position: absolute;width: 100%;height: 100%;z-index: 999;");
         this.spinner_border_element?.setAttribute("style", "margin-top: 300px;");

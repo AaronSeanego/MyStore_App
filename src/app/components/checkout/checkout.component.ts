@@ -114,8 +114,10 @@ export class CheckoutComponent {
               for(let i = 0; i < items?.documents.length; i++) {
                 if(items?.documents[i].order_id == this.orders_ID) {
                   this.ordersList.push(items?.documents[i]);
-                  this.numberOfOrder = this.numberOfOrder + parseInt(items?.documents[i].quantity);
-                  this.totalPrice = this.totalPrice + items?.documents[i].price;
+                  // this.numberOfOrder = this.numberOfOrder + parseInt(items?.documents[i].quantity);
+                  // this.totalPrice = this.totalPrice + items?.documents[i].price;
+                  // this.totalPrice = this.totalPrice + (items?.documents[i].price * parseInt(items?.documents[i].quantity));
+                  this.totalPrice = parseFloat(this.totalPrice + (items?.documents[i].price * parseInt(items?.documents[i].quantity)).toFixed(4));
                 }
               }
               this.d_flex_element?.setAttribute("style", "background-color: rgba(0,0,0,0);display: none;position: absolute;width: 0%;height: 0%;z-index: 0;");
