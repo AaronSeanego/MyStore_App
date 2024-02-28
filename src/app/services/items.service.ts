@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient} from '@angular/common/http';
 import { writeJsonFile } from 'write-json-file';
 // import fs from 'fs-extra';
-import fs, { chownSync } from 'fs';
+// import fs, { chownSync } from 'fs';
 import { writeFileSync } from 'fs-extra';
 
 @Injectable({
